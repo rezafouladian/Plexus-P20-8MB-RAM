@@ -1,0 +1,27 @@
+PIN 2   = PEL;
+PIN 3   = MEM_DMA;
+PIN 5   = MEM_JOB;
+PIN 6   = WEH;
+PIN 8   = NODE_1223;
+PIN 10  = DIAG_PEL;
+PIN 11  = DIAG_PEH;
+PIN 12  = WEL;
+PIN 13  = EN_DMA;
+PIN 14  = CAS;
+PIN 15  = EN_JOB;
+PIN 19  = !CE;
+PIN 22  = !ZZ;
+PIN 25  = !WE;
+PIN 27  = !OE;
+PIN 28  = !LB;
+PIN 37  = !SW1;
+PIN 43  = !D_JOBDIR;
+
+/* Sink only on 3.3V connections */
+CE.oe       = CE;
+ZZ.oe       = ZZ;
+WE.oe       = WE;
+OE.oe       = OE;
+LB.oe       = LB;
+
+CAS         = 'b'0;                 /* CAS is unused */
