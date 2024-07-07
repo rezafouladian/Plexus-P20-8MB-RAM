@@ -10,7 +10,6 @@ PIN 13  = EN_DMA;
 PIN 14  = CAS;
 PIN 15  = EN_JOB;
 PIN 19  = !CE;
-PIN 22  = !ZZ;
 PIN 25  = !WE;
 PIN 27  = !OE;
 PIN 28  = !LB;
@@ -19,7 +18,6 @@ PIN 43  = !D_JOBDIR;
 
 /* Sink only on 3.3V connections */
 CE.oe       = CE;
-ZZ.oe       = ZZ;
 WE.oe       = WE;
 OE.oe       = OE;
 LB.oe       = LB;
