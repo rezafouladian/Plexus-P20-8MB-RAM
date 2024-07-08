@@ -1,25 +1,87 @@
-PIN 2   = PEL;
-PIN 3   = MEM_DMA;
-PIN 5   = MEM_JOB;
-PIN 6   = WEH;
-PIN 8   = NODE_1223;
-PIN 10  = DIAG_PEL;
-PIN 11  = DIAG_PEH;
-PIN 12  = WEL;
-PIN 13  = EN_DMA;
-PIN 14  = CAS;
-PIN 15  = EN_JOB;
+/* Flow control inputs */
+PIN 3   = MEM_DMA;                  /* DMA RAM access
+                                       = ON.DMA & AS.DMA & !BA.DMA23 
+                                    */
+PIN 5   = MEM_JOB;                  /* Job RAM access
+                                       = !(MS7 & NODE_1181 & !EN.MBUS) #
+                                         !NODE_930 #
+                                         !(MS19 & MS13 * !EN.MBUS) #
+                                         AS.JOB
+                                    */
+PIN 6   = WEH;                      /* Write enable high byte */
+PIN 12  = WEL;                      /* Write enable low byte */
+/* Address lines */
+PIN 39  = A20;
+PIN 38  = A21;
+PIN 40  = A22;
+/* SRAM Control */
 PIN 19  = !CE;
 PIN 25  = !WE;
 PIN 27  = !OE;
 PIN 28  = !LB;
+PIN 30  = !UB;
+/* Transceiver control */
+PIN 31  = !D_JOBENH;
+PIN 33  = !D_JOBENL;
+PIN 34  = !D_DMAENH;
+PIN 35  = !D_DMAENL;
+PIN 42  = D_DMADIR;
+PIN 43  = D_JOBDIR;
+/* Parity */
+PIN 2   = PEL;                      /* Parity error low byte */
+PIN 44  = PEH;                      /* Parity error high byte */
+PIN 10  = DIAG_PEL;                 /* Force parity error low byte */
+PIN 11  = DIAG_PEH;                 /* Force parity error high byte */
+/* Other/Unneeded? */
+PIN 15  = EN_JOB;                   /* Job processor enabled */
+PIN 18  = EN_DMA;                   /* DMA processor enabled */
+PIN 13  = !EN_DMA2;                 /* Active low EN_DMA, probably convenience */
+PIN 8   = NODE_1223;                /* Refresh related
+                                       = MS4 & !(REFON & EN.DMA)
+                                    */
+PIN 14  = !CAS;                     /* CAS output/feedback? */
+PIN 20  = !W_DMA;
+PIN 21  = !R_JOB;
+PIN 23  = !R_DMA;
+/* Config switch */
 PIN 37  = !SW1;
-PIN 43  = !D_JOBDIR;
+
+FIELD ADDRESS = [A22..A20];
 
 /* Sink only on 3.3V connections */
 CE.oe       = CE;
 WE.oe       = WE;
 OE.oe       = OE;
 LB.oe       = LB;
+UB.oe       = UB;
 
-CAS         = 'b'0;                 /* CAS is unused */
+/* CAS is unused */
+/* May be required for !WREF and !WDTY */
+CAS         = 'b'0;                 
+
+/* Parity is not implemented */
+PEL         = DIAG_PEL;
+PEH         = DIAG_PEH;
+
+Write       = WEH # WEL;
+
+/* Transceiver control logic */
+D_DMADIR    = Write;
+D_JOBDIR    = Write;
+D_DMAENH    = MEM_DMA & !Write
+            # MEM_DMA & Write & WEH;
+D_DMAENL    = MEM_DMA & !Write
+            # MEM_DMA & Write & WEL;
+D_JOBENH    = MEM_JOB & !Write
+            # MEM_JOB & Write & WEH;
+D_JOBENL    = MEM_JOB & !Write
+            # MEM_JOB & Write & WEL;
+
+/* SRAM control logic */
+CE          = WE # OE;
+WE          = (MEM_DMA # MEM_JOB) & Write;
+OE          = (MEM_DMA # MEM_JOB) & !Write;
+LB          = WE & WEL              /* Enable low byte write */
+            # OE;                   /* Both bytes read */
+UB          = WE & WEH              /* Enable high byte write */
+            # OE;                   /* Both bytes read */
