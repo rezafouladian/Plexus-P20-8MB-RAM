@@ -1,3 +1,5 @@
+PROPERTY ATMEL {JTAG=ON};
+
 /* Flow control inputs */
 PIN 3   = MEM_DMA;                  /* DMA RAM access
                                        = ON.DMA & AS.DMA & !BA.DMA23 
@@ -36,7 +38,7 @@ PIN 11  = DIAG_PEH;                 /* Force parity error high byte */
 PIN 15  = EN_JOB;                   /* Job processor enabled */
 PIN 18  = EN_DMA;                   /* DMA processor enabled */
 PIN 13  = !EN_DMA2;                 /* Active low EN_DMA, probably convenience */
-PIN 8   = NODE_1223;                /* Refresh related
+PIN 8   = NODE_1223;                /* Refresh related?
                                        = MS4 & !(REFON & EN.DMA)
                                     */
 PIN 14  = !CAS;                     /* CAS output/feedback? */
@@ -57,7 +59,7 @@ UB.oe       = UB;
 
 /* CAS is unused */
 /* May be required for !WREF and !WDTY */
-CAS         = 'b'0;                 
+CAS         = SW1 & NODE_1223 & CE;      /* If SW1 is on then perhaps send "something" to CAS
 
 /* Parity is not implemented */
 PEL         = DIAG_PEL;
